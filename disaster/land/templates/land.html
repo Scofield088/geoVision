@@ -1,0 +1,144 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landform Change Analysis</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0d1117, #161b22);
+            color: #c9d1d9;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #1f2937;
+            padding: 15px 50px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+        }
+        .navbar h1 {
+            color: #58a6ff;
+            font-size: 1.8rem;
+            margin: 0;
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        .nav-links a {
+            color: #c9d1d9;
+            text-decoration: none;
+            font-size: 1rem;
+            padding: 10px 15px;
+            transition: 0.3s;
+            border-radius: 8px;
+        }
+        .nav-links a:hover {
+            background: #2d333b;
+            color: #58a6ff;
+        }
+        .hero-section {
+            padding: 60px 20px;
+        }
+        .hero-section h1 {
+            font-size: 2.5rem;
+            color: #58a6ff;
+            margin-bottom: 10px;
+        }
+        .form-container {
+            margin: 40px auto;
+            padding: 20px;
+            background: #1f2937;
+            border-radius: 12px;
+            width: 50%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+        }
+        .form-container label, .form-container input {
+            display: block;
+            width: 100%;
+            margin-bottom: 15px;
+            font-size: 1rem;
+            color: #c9d1d9;
+        }
+        .form-container input {
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            background: #2d333b;
+            color: #c9d1d9;
+        }
+        .form-container button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            color: #fff;
+            background: #58a6ff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .form-container button:hover {
+            background: #1f6feb;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>Landform Change Analysis</h1>
+        <div class="nav-links">
+            <a href="#">Home</a>
+            <a href="#">Analysis</a>
+            <a href="#">Reports</a>
+            <a href="#">Contact</a>
+        </div>
+    </div>
+
+    <div class="hero-section">
+        <h1>Analyze Landform Changes</h1>
+        <p>Our AI-powered platform analyzes satellite images to detect landform changes over time.</p>
+    </div>
+
+    <div class="form-container">
+        <h2>Enter Location for Analysis</h2>
+        <form action="/land_analysis" method="post">
+            {% csrf_token %}
+            <label for="location">Location:</label>
+            <input type="text" id="location" name="location" required>
+            <button type="submit">Analyze</button>
+        </form>
+    </div>
+
+    {% if assessment %}
+        <div class="hero-section">
+            <h2>Analysis Results</h2>
+            <p><strong>Change Severity:</strong> {{ assessment.change_severity }}</p>
+            <p><strong>Overall Change Intensity:</strong> {{ assessment.overall_change_intensity }}%</p>
+            <h3>Primary Change Types</h3>
+            <ul>
+                {% for change_type in assessment.change_types %}
+                    <li>{{ change_type }}</li>
+                {% endfor %}
+            </ul>
+            <h3>Detailed Changes</h3>
+            <p><strong>Water Coverage:</strong> {{ assessment.water_percentage_change }}%</p>
+            <p><strong>Elevated Areas:</strong> {{ assessment.elevated_percentage_change }}%</p>
+            <p><strong>Vegetation:</strong> {{ assessment.vegetation_percentage_change }}%</p>
+            <p><strong>Terrain Roughness:</strong> {{ assessment.rough_percentage_change }}%</p>
+            <p><strong>Mean Elevation Change:</strong> {{ assessment.mean_elevation_change }}</p>
+            <p><strong>Edge Density Change:</strong> {{ assessment.edge_density_change }}</p>
+            <h3>Visualization</h3>
+            <img src="{% static 'landform_change_assessment.png' %}" alt="Landform Change Assessment">
+        </div>
+    {% else %}
+        <div class="hero-section">
+            <h2>No analysis results available.</h2>
+        </div>
+    {% endif %}
+</body>
+</html>

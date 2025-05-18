@@ -1,0 +1,122 @@
+{% block content %}
+<div class="container">
+    <h2 class="text-center mt-4 heading">Water Resource Analysis</h2>
+
+    <!-- Form for Water Resource Analysis -->
+    <form method="post" class="text-center mt-4 shadow-lg p-4 rounded">
+        {% csrf_token %}
+        <div class="form-group mb-3">
+            <input type="text" name="latitude" class="form-control w-75 mx-auto input-lg" placeholder="Enter Latitude..." required>
+            <input type="text" name="longitude" class="form-control w-75 mx-auto input-lg mt-3" placeholder="Enter Longitude..." required>
+            <button type="submit" class="btn btn-lg btn-primary mt-3">Analyze Water Resources</button>
+        </div>
+    </form>
+
+    <!-- Display Water Resource Image -->
+    {% if water_image %}
+    <div class="text-center mt-5">
+        <h3>Detected Water Resources</h3>
+        <img src="{{ water_image }}" alt="Water Resources Map" class="img-fluid rounded shadow">
+    </div>
+    {% endif %}
+
+    <!-- Display Water Resource Percentage -->
+    {% if water_percentage %}
+    <div class="text-center mt-5">
+        <h3>Water Occurrence</h3>
+        <div class="card p-3 mb-4">
+            <p>The water occurrence percentage in this region is: <strong>{{ water_percentage }}%</strong></p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #181818;
+        color: #e1e1e1;
+    }
+
+    .container {
+        max-width: 900px;
+        margin-top: 50px;
+        padding: 0 15px;
+    }
+
+    .heading {
+        color: #4d9aff;
+        font-size: 2.5rem;
+        font-weight: 600;
+        margin-bottom: 40px;
+        text-transform: uppercase;
+    }
+
+    .form-group input {
+        padding: 15px;
+        font-size: 1.2rem;
+        border-radius: 30px;
+        border: 2px solid #444;
+        width: 80%;
+        max-width: 450px;
+        margin-bottom: 20px;
+        background-color: #333;
+        color: #e1e1e1;
+    }
+
+    .btn-primary {
+        background-color: #4d9aff;
+        border: none;
+        color: white;
+        padding: 15px 35px;
+        font-size: 1.1rem;
+        border-radius: 30px;
+        cursor: pointer;
+    }
+
+    .btn-primary:hover {
+        background-color: #3578e5;
+    }
+
+    img {
+        border-radius: 15px;
+        box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.3);
+        max-height: 600px;
+    }
+
+    .card {
+        background-color: #2c2c2c;
+        border-radius: 12px;
+        box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.3);
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    h3 {
+        font-size: 1.9rem;
+        color: #e1e1e1;
+        font-weight: 600;
+    }
+
+    @media screen and (max-width: 768px) {
+        .heading {
+            font-size: 2rem;
+        }
+
+        .form-group input {
+            width: 90%;
+        }
+
+        .btn-primary {
+            width: 100%;
+            font-size: 1rem;
+        }
+
+        img {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}

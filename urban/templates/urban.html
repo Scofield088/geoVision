@@ -1,0 +1,143 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+    .container {
+        max-width: 800px;
+        margin: auto;
+        text-align: center;
+        padding: 20px;
+        background: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        color: #2E8B57;
+        margin-bottom: 10px;
+    }
+
+    .urban-img {
+        width: 100%;
+        max-width: 600px;
+        height: auto;
+        margin-bottom: 20px;
+        border-radius: 10px;
+    }
+
+    .info-box {
+        background: white;
+        padding: 15px;
+        margin: 15px 0;
+        border-radius: 8px;
+        box-shadow: 0px 0px 5px gray;
+    }
+
+    label {
+        font-weight: bold;
+    }
+
+    input {
+        width: 100%;
+        padding: 8px;
+        margin: 10px 0;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+
+    button {
+        background: #2E8B57;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    button:hover {
+        background: #1e6d40;
+    }
+
+    #satellite-image {
+        width: 100%;
+        max-width: 500px;
+        height: auto;
+        margin-top: 10px;
+        border-radius: 10px;
+    }
+</style>
+
+<div class="container">
+    <h2>Urban Analysis with Satellite-Based Insights</h2>
+
+    <img src="{% static 'images/urban-planning.jpg' %}" alt="Urban Planning" class="urban-img">
+
+    <div class="info-box">
+        <h3>How Our Satellite-Based Image Analysis Helps Urban Planning</h3>
+        <p>
+            Urbanization is rapidly changing landscapes worldwide. Our AI-driven satellite analysis
+            helps city planners make informed decisions by evaluating land use, vegetation cover, and urban sprawl.
+            Using satellite imagery, we identify patterns of deforestation, green space availability, and urban expansion,
+            allowing for better urban sustainability and planning.
+        </p>
+    </div>
+
+    <div class="info-box">
+        <h3>Analyze Your Location</h3>
+        <form id="urban-form" method="POST">
+            {% csrf_token %}
+            <label for="latitude">Latitude:</label>
+            <input type="text" id="latitude" name="latitude" required>
+
+            <label for="longitude">Longitude:</label>
+            <input type="text" id="longitude" name="longitude" required>
+
+            <button type="submit">Analyze</button>
+        </form>
+    </div>
+
+    <div class="info-box">
+        <h3>Results:</h3>
+        <p id="urban-area"></p>
+        <p id="vegetation-area"></p>
+        <p id="suggestions"></p>
+    </div>
+
+    <div class="info-box">
+        <h3>Satellite Image:</h3>
+        <img id="satellite-image" src="" alt="Satellite Image will appear here">
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("urban-form").addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            let csrfToken = document.querySelector("[name=csrfmiddlewaretoken]").value;
+            let lat = document.getElementById("latitude").value;
+            let lon = document.getElementById("longitude").value;
+
+            fetch("/urban/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "X-CSRFToken": csrfToken
+                },
+                body: `latitude=${lat}&longitude=${lon}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("urban-area").innerText = `Urban Area: ${data.urban_area} sq meters`;
+                document.getElementById("vegetation-area").innerText = `Vegetation Area: ${data.vegetation_area} sq meters`;
+                document.getElementById("suggestions").innerText = data.suggestions;
+                document.getElementById("satellite-image").src = data.satellite_image_url;
+            })
+            .catch(error => console.error("Error:", error));
+        });
+    });
+</script>
+
+{% endblock %}
